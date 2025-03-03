@@ -1,7 +1,7 @@
 'use client'
 
 import React from 'react';
-import { AppBar, Toolbar, IconButton, Typography, Box, useMediaQuery, useTheme, ImageListItem } from '@mui/material';
+import { Toolbar, IconButton, Typography, Box, useMediaQuery, useTheme } from '@mui/material';
 import Logout from '@mui/icons-material/Logout';
 import { useRouter } from 'next/navigation';
 

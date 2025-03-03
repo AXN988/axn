@@ -65,7 +65,7 @@ const TableSection: React.FC = () => {
     const handleSave = () => {
         // Retrieve existing amountData from localStorage if it exists
         const storedAmountData = localStorage.getItem('amountData');
-        let updatedAmountData: AmountData = storedAmountData ? JSON.parse(storedAmountData) : {};
+        const updatedAmountData: AmountData = storedAmountData ? JSON.parse(storedAmountData) : {};
 
         // Assuming the current data corresponds to today (you could also provide custom date logic)
         // Use the current state of amountData to determine the year, month, and day
@@ -109,6 +109,7 @@ const TableSection: React.FC = () => {
             progress: undefined,
         });
     };
+console.log(amountData,"amountData");
 
 
     return (
@@ -125,7 +126,7 @@ const TableSection: React.FC = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {menuData.map((row: any, index: any) => (
+                            {menuData.map((row: MenuItem, index: number) => (
                                 <tr key={index}>
                                     <td className="text-start px-4 py-2 border border-gray-300">{row.name}</td>
                                     <td className="text-end px-4 py-2 border border-gray-300">
