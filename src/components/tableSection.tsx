@@ -3,13 +3,28 @@ import React, { useState, useEffect } from 'react';
 import itemsData from '../data.json';
 import { AmountData, DayData, MenuItem } from '@/model/menuItems';
 import { toast, ToastContainer } from 'react-toastify';
+import { FirebaseServices } from '@/services/firebase-services';
 
-const TableSection: React.FC = () => {
-    const [menuData, setMenuData] = useState<MenuItem[]>(itemsData.data);
+interface TableSectionProps {
+    menu: MenuItem[];
+    firebaseAmountData: AmountData;
+    addedMenu: MenuItem[];
+    addedExpectedIncome: number;
+    addedTotalIncome: number;
+}
+const TableSection: React.FC<TableSectionProps> = ({ menu, firebaseAmountData, addedMenu, addedExpectedIncome, addedTotalIncome }) => {
+    const [menuData, setMenuData] = useState<MenuItem[]>([]);
     const [expectedIncome, setExpectedIncome] = useState<number>(0);
     const [totalIncome, setTotalIncome] = useState<number>(0);
     const [totalDiff, setTotalDiff] = useState<number>(0);
-    const [amountData, setAmountData] = useState<AmountData>({});
+
+    useEffect(() => {
+        console.log(addedMenu,"addedMenu");
+        
+        setMenuData(addedMenu && addedMenu.length > 0  ? addedMenu : menu);
+        setExpectedIncome(addedExpectedIncome);
+        setTotalIncome(addedTotalIncome);
+    }, [menu,addedExpectedIncome,addedTotalIncome])
     // Calculate the total expected income based on menu data
     const calculateExpectedIncome = () => {
         const total = menuData.reduce((acc, item) => {
@@ -63,15 +78,11 @@ const TableSection: React.FC = () => {
     };
 
     const handleSave = () => {
-        // Retrieve existing amountData from localStorage if it exists
-        const storedAmountData = localStorage.getItem('amountData');
-        const updatedAmountData: AmountData = storedAmountData ? JSON.parse(storedAmountData) : {};
 
-        // Assuming the current data corresponds to today (you could also provide custom date logic)
         // Use the current state of amountData to determine the year, month, and day
-        const currentYear = Object.keys(updatedAmountData)[0]; // Using the first available year
-        const currentMonth = Object.keys(updatedAmountData[currentYear])[0]; // Using the first available month
-        const currentDay = Object.keys(updatedAmountData[currentYear][currentMonth])[0]; // Using the first available day
+        const currentYear = Object.keys(firebaseAmountData)[0]; // Using the first available year
+        const currentMonth = Object.keys(firebaseAmountData[currentYear])[0]; // Using the first available month
+        const currentDay = Object.keys(firebaseAmountData[currentYear][currentMonth])[0]; // Using the first available day
 
         // Create a DayData object with the current menuData, expectedIncome, and totalIncome
         const dayData: DayData = {
@@ -81,35 +92,44 @@ const TableSection: React.FC = () => {
         };
 
         // Ensure that the year, month, and day exist in the structure, and update or add the data
-        if (!updatedAmountData[currentYear]) {
-            updatedAmountData[currentYear] = {};
+        if (!firebaseAmountData[currentYear]) {
+            firebaseAmountData[currentYear] = {};
         }
-        if (!updatedAmountData[currentYear][currentMonth]) {
-            updatedAmountData[currentYear][currentMonth] = {};
+        if (!firebaseAmountData[currentYear][currentMonth]) {
+            firebaseAmountData[currentYear][currentMonth] = {};
         }
 
         // Update the data for the current day (use the existing data if present, otherwise update with new data)
-        updatedAmountData[currentYear][currentMonth][currentDay] = {
-            ...updatedAmountData[currentYear][currentMonth][currentDay], // Preserve existing data
+        firebaseAmountData[currentYear][currentMonth][currentDay] = {
+            ...firebaseAmountData[currentYear][currentMonth][currentDay], // Preserve existing data
             ...dayData, // Update with the current data
         };
 
-        // Update the state with the new amountData
-        setAmountData(updatedAmountData);
-
-        // Save the updated amountData to localStorage
-        localStorage.setItem('amountData', JSON.stringify(updatedAmountData));
-        toast.success('Data successfully added', {
-            position: "top-right",
-            autoClose: 3000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
+        // Call the setAmountData function from FirebaseServices
+        FirebaseServices.shared.setAmountData(firebaseAmountData, (status) => {
+            if (status === "done") {
+                toast.success('Data successfully added', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            } else {
+                toast.error('Error adding data', {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
         });
     };
-console.log(amountData,"amountData");
 
 
     return (

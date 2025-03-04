@@ -4,13 +4,17 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Box, MenuItem, Select, FormControl, SelectChangeEvent } from '@mui/material';
 import { AmountData } from '@/model/menuItems';
 
-const DateSelector: React.FC = () => {
+interface DateSelectorProps {
+    amountData: AmountData;
+    onSetAmountData: (year: string, month: string, date: string) => void;
+    onSetNullAmountData: (year: string, month: string, date: string,data: any) => void;
+}
+const DateSelector: React.FC<DateSelectorProps> = ({ amountData, onSetAmountData,onSetNullAmountData }) => {
     const currentDate = new Date(); // Get the current date
 
     const currentYear = currentDate.getFullYear(); // Get the current year
     const currentMonth = currentDate.getMonth(); // Get the current month (0-based)
     const currentDay = currentDate.getDate(); // Get the current date (day of the month)
-    const [amountData, setAmountData] = useState<AmountData>({});
     const pastYears = Array.from({ length: 6 }, (_, i) => currentYear - i); // List current year and 5 previous years
 
     const months = [
@@ -26,15 +30,21 @@ const DateSelector: React.FC = () => {
 
     const handleYearChange = (event: SelectChangeEvent<number>) => {
         setYear(event.target.value as number);
+        const monthKey = months[month - 1];
+        onSetNullAmountData(event.target.value.toString(), monthKey, date.toString(),{});
     };
 
     const handleMonthChange = (event: SelectChangeEvent<number>) => {
         setMonth(event.target.value as number);
         setDate(1); // Reset date to 1 when month changes
+        const monthKey = months[(event.target.value as number) - 1];
+        onSetNullAmountData(year.toString(), monthKey, date.toString(),{});
     };
 
     const handleDayClick = (day: number) => {
         setDate(day); // Update selected date when a day is clicked
+        const monthKey = months[month - 1];
+        onSetNullAmountData(year.toString(), monthKey, day.toString(),{});
     };
 
     const daysInMonth = new Date(year, month, 0).getDate(); // Get the number of days in the selected month
@@ -85,8 +95,7 @@ const DateSelector: React.FC = () => {
             totalIncome: 0, // Set a default total income (you can modify it based on your logic)
         };
 
-        setAmountData(updatedAmountData); // Update the state with the new amountData
-        localStorage.setItem('amountData', JSON.stringify(updatedAmountData))
+        onSetAmountData(year.toString(), monthKey, date.toString()); // Update the state with the new amountData
     }, [year, month, date]); // Trigger the effect when year, month, or date changes
 
     return (
