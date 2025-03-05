@@ -7,7 +7,7 @@ import { AmountData } from '@/model/menuItems';
 interface DateSelectorProps {
     amountData: AmountData;
     onSetAmountData: (year: string, month: string, date: string) => void;
-    onSetNullAmountData: (year: string, month: string, date: string,data: any) => void;
+    onSetNullAmountData: (year: string, month: string, date: string) => void;
 }
 const DateSelector: React.FC<DateSelectorProps> = ({ amountData, onSetAmountData,onSetNullAmountData }) => {
     const currentDate = new Date(); // Get the current date
@@ -31,20 +31,20 @@ const DateSelector: React.FC<DateSelectorProps> = ({ amountData, onSetAmountData
     const handleYearChange = (event: SelectChangeEvent<number>) => {
         setYear(event.target.value as number);
         const monthKey = months[month - 1];
-        onSetNullAmountData(event.target.value.toString(), monthKey, date.toString(),{});
+        onSetNullAmountData(event.target.value.toString(), monthKey, date.toString());
     };
 
     const handleMonthChange = (event: SelectChangeEvent<number>) => {
         setMonth(event.target.value as number);
         setDate(1); // Reset date to 1 when month changes
         const monthKey = months[(event.target.value as number) - 1];
-        onSetNullAmountData(year.toString(), monthKey, date.toString(),{});
+        onSetNullAmountData(year.toString(), monthKey, date.toString());
     };
 
     const handleDayClick = (day: number) => {
         setDate(day); // Update selected date when a day is clicked
         const monthKey = months[month - 1];
-        onSetNullAmountData(year.toString(), monthKey, day.toString(),{});
+        onSetNullAmountData(year.toString(), monthKey, day.toString());
     };
 
     const daysInMonth = new Date(year, month, 0).getDate(); // Get the number of days in the selected month
