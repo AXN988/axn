@@ -13,8 +13,12 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://axn-web-cb7d4.web.app/"),
   title: "AXN",
   description: "AXN HOTEL",
+  applicationName: "AXN",
+  manifest: "/manifest.json",
+  themeColor: "#FFFFFF",
 };
 
 export default function RootLayout({

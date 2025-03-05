@@ -205,9 +205,9 @@ const TableSection: React.FC<TableSectionProps> = ({ menu, firebaseAmountData, a
                 const finalY = data.cursor ? data.cursor.y : 0; // Get the Y position of the last drawn content
 
                 doc.setFont("helvetica", "bold");
-                doc.text(`Expected Income: ${expectedIncome}`, doc.internal.pageSize.width / 2, finalY + 10, { align: "center" });
-                doc.text(`Total Income: ${totalIncome}`, doc.internal.pageSize.width / 2, finalY + 20, { align: "center" });
-                doc.text(`Total Diff: ${totalDiff >= 0 ? `+${totalDiff}` : totalDiff}`, doc.internal.pageSize.width / 2, finalY + 30, { align: "center" });
+                doc.text(`Expected Income: ${expectedIncome}`, 96, finalY + 10, { align: "right" });
+                doc.text(`Total Income: ${totalIncome}`, 85, finalY + 20, { align: "right" });
+                doc.text(`Total Difference: ${totalDiff >= 0 ? `+${totalDiff}` : totalDiff}`, 87, finalY + 30, { align: "right" });
             },
         });
 
@@ -285,7 +285,7 @@ const TableSection: React.FC<TableSectionProps> = ({ menu, firebaseAmountData, a
                         <table className="w-full table-auto border-collapse border border-gray-300">
                             <thead>
                                 <tr className="bg-primary text-white">
-                                    <th className="text-start px-4 py-2 border border-primary">Account Name</th>
+                                    <th className="text-start px-4 py-2 border border-primary">Accounts</th>
                                     <th className="text-end px-4 py-2 border border-primary"></th>
                                 </tr>
                             </thead>
