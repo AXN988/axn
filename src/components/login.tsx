@@ -1,6 +1,6 @@
 'use client'
 import { useRouter } from 'next/navigation';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 const LoginPage: React.FC = () => {
   // Create references for the input fields
@@ -53,6 +53,12 @@ const LoginPage: React.FC = () => {
       alert('Incorrect password!');
     }
   };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined' && localStorage.getItem('login')) {
+      router.push('/home');
+    }
+  }, [router]);
 
   return (
     <div className="flex h-screen flex-col md:flex-row bg-primary">

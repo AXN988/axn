@@ -22,7 +22,7 @@ const Navbar: React.FC = () => {
                 {/* Left Side Logo and Text in a Row */}
                 {/* Logo Image */}
                 <img
-                    src={'./axn_navbar_logo.png'}
+                    src={'/axn_navbar_logo.png'}
                     alt="Logo"
                     style={{ width: '120px', height: '60px', objectFit: 'contain' }} // Adjust the size as needed
                 />
